@@ -1,0 +1,12 @@
+{
+    "dataset_name": "UCI Online Retail II",
+    "source": "UCI Machine Learning Repository",
+    "source_file": "data\\raw\\online_retail_II.xlsx",
+    "processed_file": "data\\processed\\online_retail_ii.parquet",
+    "retrieval_date_utc": "2026-09-09T02:30:50.229037+00:00",
+    "sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+    "row_count": 1067371,
+    "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "project_dataset_name": "Boreal Marche",
+    "provenance_note": "Public UCI Online Retail II dataset re-skinned as Boreal Marche for a pedagogical project."
+}
