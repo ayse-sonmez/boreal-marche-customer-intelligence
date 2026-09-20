@@ -1,0 +1,56 @@
+[
+    {
+        "step": "identify_cancelled_transactions",
+        "before_rows": 1067371,
+        "after_rows": 1067371,
+        "rows_removed": 0,
+        "cancelled_rows_identified": 19494,
+        "rationale": "Cancelled transactions are retained in the Silver layer because basket information may still be useful for recommendation. They are flagged so prediction pipelines can exclude them when necessary."
+    },
+    {
+        "step": "remove_invalid_quantities",
+        "before_rows": 1067371,
+        "after_rows": 1063914,
+        "rows_removed": 3457,
+        "rationale": "Zero quantities and negative quantities that are not marked as cancellations are removed. Negative quantities belonging to cancelled invoices are retained for later model-specific handling."
+    },
+    {
+        "step": "remove_non_positive_price",
+        "before_rows": 1063914,
+        "after_rows": 1061164,
+        "rows_removed": 2750,
+        "rationale": "Rows with zero or negative prices are not considered valid commercial product transactions."
+    },
+    {
+        "step": "remove_missing_customer_id",
+        "before_rows": 1061164,
+        "after_rows": 824293,
+        "rows_removed": 236871,
+        "rationale": "Customer-level prediction requires a valid customer identifier."
+    },
+    {
+        "step": "canonicalise_description",
+        "before_rows": 824293,
+        "after_rows": 824293,
+        "rows_removed": 0,
+        "rationale": "Descriptions are normalised for consistent product-level analysis."
+    },
+    {
+        "step": "remove_non_product_service_skus",
+        "before_rows": 824293,
+        "after_rows": 820601,
+        "rows_removed": 3692,
+        "rationale": "Confirmed non-product records such as postage, carriage, bank charges, discounts, manual entries, adjustments and test transactions are excluded from product purchase behaviour."
+    },
+    {
+        "step": "review_outliers",
+        "before_rows": 820601,
+        "after_rows": 820601,
+        "rows_removed": 0,
+        "quantity_abs_99_9_percentile": 600.0,
+        "price_99_9_percentile": 35.95,
+        "quantity_rows_above_threshold": 686,
+        "price_rows_above_threshold": 800,
+        "rationale": "Extreme quantity and price values were reviewed rather than automatically removed. Some high values are legitimate products, while some extreme quantities are related to cancelled transactions. The final treatment will depend on the prediction or recommendation use case."
+    }
+]

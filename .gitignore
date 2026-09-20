@@ -60,3 +60,5 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+# Local MLflow database
+mlflow.db

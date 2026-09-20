@@ -1,0 +1,23 @@
+{
+  "model_name": "GradientBoostingClassifier",
+  "calibration": "sigmoid",
+  "training_rows": 4204,
+  "test_rows": 1052,
+  "feature_count": 28,
+  "threshold": 0.73,
+  "test_pr_auc": 0.7951309567606022,
+  "test_roc_auc": 0.8192312499081058,
+  "test_brier": 0.16992357416042816,
+  "test_recall_top_decile": 0.2096069868995633,
+  "best_parameters": {
+    "n_estimators": 157,
+    "learning_rate": 0.01436244069943827,
+    "max_depth": 3
+  },
+  "created_at_utc": "2026-09-20T18:12:23.968905+00:00",
+  "profit_assumptions": {
+    "offer_cost": 5.0,
+    "successful_target_value": 20.0,
+    "note": "Scenario-based assumptions, not observed causal profit."
+  }
+}
