@@ -1,10 +1,14 @@
 from pathlib import Path
 import json
+import platform
+import subprocess
+import time
 from datetime import datetime, timezone
 
 import joblib
 import numpy as np
 import pandas as pd
+import sklearn
 
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.compose import ColumnTransformer
@@ -43,7 +47,8 @@ BEST_PARAMS = {
     "max_depth": 3,
 }
 
-# Selected using validation data only
+# Selected previously using validation data only.
+# Do not change this based on final test results.
 PROFIT_THRESHOLD = 0.73
 
 OFFER_COST = 5.0
@@ -56,10 +61,10 @@ def calculate_profit(
     threshold,
 ):
     """
-    Customers below the threshold are treated as at risk
-    and receive a retention offer.
+    Customers below the return-probability threshold
+    are treated as at risk and receive an offer.
 
-    The profit values are project assumptions,
+    Profit values are scenario assumptions,
     not observed causal campaign profit.
     """
 
@@ -83,8 +88,8 @@ def recall_top_decile(
     probabilities,
 ):
     """
-    Recall among the 10% of customers with the highest
-    predicted probability of returning.
+    Fraction of all positive customers captured
+    in the top 10% ranked by predicted return probability.
     """
 
     number_top = max(
@@ -121,12 +126,42 @@ def recall_top_decile(
     )
 
 
+def get_git_commit():
+    """
+    Return the current Git commit SHA.
+    """
+
+    try:
+        result = subprocess.run(
+            [
+                "git",
+                "rev-parse",
+                "HEAD",
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        return result.stdout.strip()
+
+    except Exception:
+        return "unavailable"
+
+
 def main():
 
-    print("Loading training and final test data...")
+    print(
+        "Loading training and final test data..."
+    )
 
-    train_df = pd.read_parquet(TRAIN_PATH)
-    test_df = pd.read_parquet(TEST_PATH)
+    train_df = pd.read_parquet(
+        TRAIN_PATH
+    )
+
+    test_df = pd.read_parquet(
+        TEST_PATH
+    )
 
     print(
         f"Training customers: {len(train_df):,}"
@@ -159,13 +194,17 @@ def main():
         "label_90d"
     ].astype(int)
 
+    feature_names = list(
+        X_train.columns
+    )
+
     categorical_features = [
         "country"
     ]
 
     numeric_features = [
         column
-        for column in X_train.columns
+        for column in feature_names
         if column not in categorical_features
     ]
 
@@ -233,7 +272,7 @@ def main():
         ]
     )
 
-    # Calibrate using only training data.
+    # Calibration is performed only with training data.
     final_model = CalibratedClassifierCV(
         estimator=base_model,
         method="sigmoid",
@@ -244,13 +283,24 @@ def main():
         "\nTraining final calibrated model..."
     )
 
+    fit_start = time.perf_counter()
+
     final_model.fit(
         X_train,
         y_train,
     )
 
+    fit_time_seconds = (
+        time.perf_counter() - fit_start
+    )
+
     print(
-        "Evaluating final held-out test set..."
+        f"Fit time: "
+        f"{fit_time_seconds:.2f} seconds"
+    )
+
+    print(
+        "\nEvaluating final held-out test set..."
     )
 
     test_probabilities = (
@@ -291,6 +341,11 @@ def main():
         0.50,
     )
 
+    profit_improvement = (
+        estimated_profit
+        - estimated_profit_05
+    )
+
     print(
         "\n"
         "========================================"
@@ -317,8 +372,13 @@ def main():
     )
 
     print(
-        f"Recall @ top decile: "
+        "Recall @ top decile: "
         f"{top_decile_recall:.4f}"
+    )
+
+    print(
+        f"Fit time: "
+        f"{fit_time_seconds:.2f} seconds"
     )
 
     print(
@@ -337,7 +397,15 @@ def main():
         f"${estimated_profit_05:,.2f}"
     )
 
-    # Save complete inference model
+    print(
+        "Scenario profit improvement: "
+        f"${profit_improvement:,.2f}"
+    )
+
+    # ---------------------------------------------------------
+    # Save complete inference pipeline
+    # ---------------------------------------------------------
+
     MODEL_PATH.parent.mkdir(
         parents=True,
         exist_ok=True,
@@ -348,8 +416,12 @@ def main():
         MODEL_PATH,
     )
 
-    # Save simple model metadata
+    # ---------------------------------------------------------
+    # Model sidecar metadata
+    # ---------------------------------------------------------
+
     metadata = {
+        "model_version": "1.0",
         "model_name": (
             "GradientBoostingClassifier"
         ),
@@ -363,8 +435,20 @@ def main():
         "feature_count": int(
             X_train.shape[1]
         ),
+        "features_in_order": (
+            feature_names
+        ),
+        "categorical_features": (
+            categorical_features
+        ),
+        "numeric_features": (
+            numeric_features
+        ),
         "threshold": (
             PROFIT_THRESHOLD
+        ),
+        "threshold_selected_on": (
+            "validation data only"
         ),
         "test_pr_auc": float(
             pr_auc
@@ -378,14 +462,48 @@ def main():
         "test_recall_top_decile": float(
             top_decile_recall
         ),
+        "fit_time_seconds": float(
+            fit_time_seconds
+        ),
         "best_parameters": (
             BEST_PARAMS
+        ),
+        "git_commit": (
+            get_git_commit()
         ),
         "created_at_utc": (
             datetime.now(
                 timezone.utc
             ).isoformat()
         ),
+        "libraries": {
+            "python": (
+                platform.python_version()
+            ),
+            "pandas": (
+                pd.__version__
+            ),
+            "numpy": (
+                np.__version__
+            ),
+            "scikit_learn": (
+                sklearn.__version__
+            ),
+            "joblib": (
+                joblib.__version__
+            ),
+        },
+        "profit_results": {
+            "threshold_0_73": float(
+                estimated_profit
+            ),
+            "threshold_0_50": float(
+                estimated_profit_05
+            ),
+            "improvement": float(
+                profit_improvement
+            ),
+        },
         "profit_assumptions": {
             "offer_cost": (
                 OFFER_COST
@@ -412,24 +530,29 @@ def main():
         )
 
     print(
-        f"\nModel saved to: "
+        f"\nFinal calibrated model saved to: "
         f"{MODEL_PATH}"
     )
 
     print(
-        f"Metadata saved to: "
+        f"Model metadata saved to: "
         f"{META_PATH}"
     )
 
     print(
-        "\nIMPORTANT: "
-        "The held-out test set has now been "
-        "used for final evaluation. "
-        "Do not tune the model based on "
-        "these test results."
+        "\nIMPORTANT:"
+    )
+
+    print(
+        "The held-out test set has now been used "
+        "for final evaluation."
+    )
+
+    print(
+        "Do not change the model, hyperparameters "
+        "or threshold based on these test results."
     )
 
 
 if __name__ == "__main__":
     main()
-    

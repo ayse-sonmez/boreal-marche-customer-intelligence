@@ -18,59 +18,57 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
+# ---------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------
+
 DATA_PATH = Path("data/processed/customer_features_train.parquet")
+REPORTS_DIR = Path("reports")
 
 RANDOM_STATE = 42
 
-# Best parameters found with Optuna
-BEST_PARAMS = {
-    "n_estimators": 157,
-    "learning_rate": 0.01436244069943827,
-    "max_depth": 3,
-}
+# Best parameters found with Optuna on the training data
+N_ESTIMATORS = 157
+LEARNING_RATE = 0.01436244069943827
+MAX_DEPTH = 3
 
-# Simple business assumptions for the retention campaign
+# Simple business assumptions for threshold selection
 OFFER_COST = 5.0
 VALUE_OF_SUCCESSFUL_TARGET = 20.0
 
 
-def calculate_profit(y_true, return_probabilities, threshold):
-    """
-    Customers with a return probability below the threshold
-    are considered at risk and receive an offer.
+# ---------------------------------------------------------
+# Build model pipeline
+# ---------------------------------------------------------
 
-    This is a simple business scenario, not measured causal uplift.
-    """
-
-    targeted = return_probabilities < threshold
-
-    profit = np.where(
-        targeted & (y_true == 0),
-        VALUE_OF_SUCCESSFUL_TARGET - OFFER_COST,
-        np.where(
-            targeted & (y_true == 1),
-            -OFFER_COST,
-            0.0,
-        ),
+def build_model():
+    model = GradientBoostingClassifier(
+        n_estimators=N_ESTIMATORS,
+        learning_rate=LEARNING_RATE,
+        max_depth=MAX_DEPTH,
+        random_state=RANDOM_STATE,
     )
 
-    return profit.sum()
+    return model
 
 
 def main():
-    # Load training data only.
-    # The final test set is still untouched.
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    print("Loading training data...")
+
     df = pd.read_parquet(DATA_PATH)
 
-    excluded_columns = [
+    y = df["label_90d"]
+
+    columns_to_drop = [
         "Customer ID",
         "first_purchase_date",
         "last_purchase_date",
         "label_90d",
     ]
 
-    X = df.drop(columns=excluded_columns)
-    y = df["label_90d"].astype(int)
+    X = df.drop(columns=columns_to_drop)
 
     categorical_features = ["country"]
 
@@ -80,7 +78,10 @@ def main():
         if column not in categorical_features
     ]
 
-    # Numeric preprocessing
+    # ---------------------------------------------------------
+    # Preprocessing
+    # ---------------------------------------------------------
+
     numeric_pipeline = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="median")),
@@ -88,13 +89,9 @@ def main():
         ]
     )
 
-    # Country preprocessing
     categorical_pipeline = Pipeline(
         steps=[
-            (
-                "imputer",
-                SimpleImputer(strategy="most_frequent"),
-            ),
+            ("imputer", SimpleImputer(strategy="most_frequent")),
             (
                 "onehot",
                 OneHotEncoder(
@@ -107,22 +104,16 @@ def main():
 
     preprocessor = ColumnTransformer(
         transformers=[
-            (
-                "numeric",
-                numeric_pipeline,
-                numeric_features,
-            ),
-            (
-                "categorical",
-                categorical_pipeline,
-                categorical_features,
-            ),
+            ("numeric", numeric_pipeline, numeric_features),
+            ("categorical", categorical_pipeline, categorical_features),
         ]
     )
 
-    # Split the training data again into model training
-    # and validation data.
-    X_train, X_validation, y_train, y_validation = train_test_split(
+    # ---------------------------------------------------------
+    # Internal train / validation split
+    # ---------------------------------------------------------
+
+    X_train, X_val, y_train, y_val = train_test_split(
         X,
         y,
         test_size=0.25,
@@ -130,93 +121,92 @@ def main():
         stratify=y,
     )
 
-    # Best Gradient Boosting model from Optuna
+    print(f"Sub-training customers: {len(X_train):,}")
+    print(f"Validation customers: {len(X_val):,}")
+
+    # ---------------------------------------------------------
+    # Uncalibrated model
+    # ---------------------------------------------------------
+
     base_model = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            (
-                "model",
-                GradientBoostingClassifier(
-                    random_state=RANDOM_STATE,
-                    **BEST_PARAMS,
-                ),
-            ),
+            ("model", build_model()),
         ]
     )
 
-    # ---------------------------------------------------------
-    # 1. UNCALIBRATED MODEL
-    # ---------------------------------------------------------
+    print("\nTraining uncalibrated model...")
 
     base_model.fit(X_train, y_train)
 
-    uncalibrated_prob = base_model.predict_proba(
-        X_validation
-    )[:, 1]
+    uncalibrated_prob = base_model.predict_proba(X_val)[:, 1]
 
-    print("UNCALIBRATED MODEL")
-
-    print(
-        f"PR-AUC: "
-        f"{average_precision_score(y_validation, uncalibrated_prob):.4f}"
+    uncalibrated_pr_auc = average_precision_score(
+        y_val,
+        uncalibrated_prob,
     )
 
-    print(
-        f"ROC-AUC: "
-        f"{roc_auc_score(y_validation, uncalibrated_prob):.4f}"
+    uncalibrated_roc_auc = roc_auc_score(
+        y_val,
+        uncalibrated_prob,
     )
 
-    print(
-        f"Brier: "
-        f"{brier_score_loss(y_validation, uncalibrated_prob):.4f}"
+    uncalibrated_brier = brier_score_loss(
+        y_val,
+        uncalibrated_prob,
     )
 
     # ---------------------------------------------------------
-    # 2. CALIBRATED MODEL
+    # Calibrated model
     # ---------------------------------------------------------
+
+    calibrated_base_model = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("model", build_model()),
+        ]
+    )
 
     calibrated_model = CalibratedClassifierCV(
-        estimator=base_model,
+        estimator=calibrated_base_model,
         method="sigmoid",
         cv=5,
     )
 
+    print("Training calibrated model...")
+
     calibrated_model.fit(X_train, y_train)
 
-    calibrated_prob = calibrated_model.predict_proba(
-        X_validation
-    )[:, 1]
+    calibrated_prob = calibrated_model.predict_proba(X_val)[:, 1]
 
-    print("\nCALIBRATED MODEL")
-
-    print(
-        f"PR-AUC: "
-        f"{average_precision_score(y_validation, calibrated_prob):.4f}"
+    calibrated_pr_auc = average_precision_score(
+        y_val,
+        calibrated_prob,
     )
 
-    print(
-        f"ROC-AUC: "
-        f"{roc_auc_score(y_validation, calibrated_prob):.4f}"
+    calibrated_roc_auc = roc_auc_score(
+        y_val,
+        calibrated_prob,
     )
 
-    print(
-        f"Brier: "
-        f"{brier_score_loss(y_validation, calibrated_prob):.4f}"
+    calibrated_brier = brier_score_loss(
+        y_val,
+        calibrated_prob,
     )
 
     # ---------------------------------------------------------
-    # 3. RELIABILITY CURVE
+    # Reliability curve
     # ---------------------------------------------------------
 
-    prob_true_before, prob_pred_before = calibration_curve(
-        y_validation,
+    uncalibrated_true, uncalibrated_pred = calibration_curve(
+        y_val,
         uncalibrated_prob,
         n_bins=10,
         strategy="uniform",
     )
 
-    prob_true_after, prob_pred_after = calibration_curve(
-        y_validation,
+    calibrated_true, calibrated_pred = calibration_curve(
+        y_val,
         calibrated_prob,
         n_bins=10,
         strategy="uniform",
@@ -225,15 +215,15 @@ def main():
     plt.figure(figsize=(7, 6))
 
     plt.plot(
-        prob_pred_before,
-        prob_true_before,
+        uncalibrated_pred,
+        uncalibrated_true,
         marker="o",
         label="Before calibration",
     )
 
     plt.plot(
-        prob_pred_after,
-        prob_true_after,
+        calibrated_pred,
+        calibrated_true,
         marker="o",
         label="After calibration",
     )
@@ -247,80 +237,124 @@ def main():
 
     plt.xlabel("Mean predicted probability")
     plt.ylabel("Observed positive rate")
-    plt.title("Gradient Boosting Reliability Curve")
+    plt.title("Retention Model Reliability Curve")
     plt.legend()
     plt.tight_layout()
 
-    Path("reports").mkdir(exist_ok=True)
+    reliability_path = (
+        REPORTS_DIR / "calibration_reliability_curve.png"
+    )
 
     plt.savefig(
-        "reports/calibration_reliability_curve.png",
+        reliability_path,
         dpi=150,
     )
 
     plt.close()
 
-    print(
-        "\nReliability curve saved to: "
-        "reports/calibration_reliability_curve.png"
+    # ---------------------------------------------------------
+    # Profit-based threshold
+    # ---------------------------------------------------------
+
+    thresholds = np.arange(
+        0.05,
+        0.96,
+        0.01,
     )
 
-    # ---------------------------------------------------------
-    # 4. PROFIT-BASED THRESHOLD
-    # ---------------------------------------------------------
+    profit_results = []
 
-    thresholds = np.arange(0.05, 0.96, 0.01)
+    for threshold in thresholds:
 
-    profits = [
-        calculate_profit(
-            y_validation.to_numpy(),
-            calibrated_prob,
-            threshold,
+        # Low return probability means customer is considered at risk.
+        targeted = calibrated_prob < threshold
+
+        profit = np.where(
+            targeted & (y_val.to_numpy() == 0),
+            VALUE_OF_SUCCESSFUL_TARGET - OFFER_COST,
+            np.where(
+                targeted & (y_val.to_numpy() == 1),
+                -OFFER_COST,
+                0.0,
+            ),
+        ).sum()
+
+        profit_results.append(
+            {
+                "threshold": threshold,
+                "profit": profit,
+                "customers_targeted": int(targeted.sum()),
+            }
         )
-        for threshold in thresholds
+
+    profit_df = pd.DataFrame(profit_results)
+
+    best_row = profit_df.loc[
+        profit_df["profit"].idxmax()
     ]
 
-    best_index = int(np.argmax(profits))
+    best_threshold = float(best_row["threshold"])
+    best_profit = float(best_row["profit"])
 
-    best_threshold = thresholds[best_index]
-    best_profit = profits[best_index]
+    # Profit using the common 0.50 threshold
+    threshold_050_row = profit_df.iloc[
+        (profit_df["threshold"] - 0.50).abs().argsort()[:1]
+    ]
 
-    profit_at_05 = calculate_profit(
-        y_validation.to_numpy(),
-        calibrated_prob,
-        0.50,
+    profit_at_050 = float(
+        threshold_050_row["profit"].iloc[0]
     )
+
+    profit_improvement = best_profit - profit_at_050
+
+    # Save threshold results
+    threshold_report_path = (
+        REPORTS_DIR / "profit_threshold_results.csv"
+    )
+
+    profit_df.to_csv(
+        threshold_report_path,
+        index=False,
+    )
+
+    # ---------------------------------------------------------
+    # Results
+    # ---------------------------------------------------------
+
+    print("\nUNCALIBRATED MODEL")
+    print("------------------")
+    print(f"PR-AUC:  {uncalibrated_pr_auc:.4f}")
+    print(f"ROC-AUC: {uncalibrated_roc_auc:.4f}")
+    print(f"Brier:   {uncalibrated_brier:.4f}")
+
+    print("\nCALIBRATED MODEL")
+    print("----------------")
+    print(f"PR-AUC:  {calibrated_pr_auc:.4f}")
+    print(f"ROC-AUC: {calibrated_roc_auc:.4f}")
+    print(f"Brier:   {calibrated_brier:.4f}")
 
     print("\nPROFIT-BASED THRESHOLD")
-
+    print("----------------------")
+    print(f"Best threshold: {best_threshold:.2f}")
+    print(f"Estimated scenario profit: ${best_profit:,.0f}")
+    print(f"Profit at threshold 0.50: ${profit_at_050:,.0f}")
     print(
-        f"Offer cost assumption: "
-        f"${OFFER_COST:.2f}"
+        f"Improvement over 0.50: ${profit_improvement:,.0f}"
     )
 
     print(
-        "Value of successfully targeting an at-risk customer: "
-        f"${VALUE_OF_SUCCESSFUL_TARGET:.2f}"
+        "\nNote: Profit values are scenario-based estimates, "
+        "not observed causal uplift."
     )
 
     print(
-        f"Best threshold: "
-        f"{best_threshold:.2f}"
+        f"\nReliability curve saved to: "
+        f"{reliability_path}"
     )
 
     print(
-        f"Estimated profit at best threshold: "
-        f"${best_profit:,.2f}"
-    )
-
-    print(
-        f"Estimated profit at threshold 0.50: "
-        f"${profit_at_05:,.2f}"
-    )
-
-    print(
-        "\nNote: Profit values are scenario-based assumptions "
-        "for the project, not observed causal campaign profit."
+        f"Threshold results saved to: "
+        f"{threshold_report_path}"
     )
 
 
