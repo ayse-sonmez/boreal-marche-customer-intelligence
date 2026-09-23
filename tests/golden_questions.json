@@ -1,0 +1,307 @@
+[
+  {
+    "id": 1,
+    "category": "policy",
+    "language": "en",
+    "question": "How many days do I have to return an eligible product?",
+    "expected_tool": "policy_search",
+    "expected_source": "returns_policy.md"
+  },
+  {
+    "id": 2,
+    "category": "policy",
+    "language": "en",
+    "question": "Can I return a product after 30 days?",
+    "expected_tool": "policy_search",
+    "expected_source": "returns_policy.md"
+  },
+  {
+    "id": 3,
+    "category": "policy",
+    "language": "en",
+    "question": "How long does a refund normally take?",
+    "expected_tool": "policy_search",
+    "expected_source": "returns_policy.md"
+  },
+  {
+    "id": 4,
+    "category": "policy",
+    "language": "en",
+    "question": "What should I do if my order arrives damaged?",
+    "expected_tool": "policy_search",
+    "expected_source": "returns_policy.md"
+  },
+  {
+    "id": 5,
+    "category": "policy",
+    "language": "en",
+    "question": "Are original delivery fees refundable?",
+    "expected_tool": "policy_search",
+    "expected_source": "returns_policy.md"
+  },
+  {
+    "id": 6,
+    "category": "policy",
+    "language": "en",
+    "question": "How long does order preparation normally take?",
+    "expected_tool": "policy_search",
+    "expected_source": "shipping_policy.md"
+  },
+  {
+    "id": 7,
+    "category": "policy",
+    "language": "en",
+    "question": "How long does delivery normally take?",
+    "expected_tool": "policy_search",
+    "expected_source": "shipping_policy.md"
+  },
+  {
+    "id": 8,
+    "category": "policy",
+    "language": "en",
+    "question": "Where can I see my shipping fees?",
+    "expected_tool": "policy_search",
+    "expected_source": "shipping_policy.md"
+  },
+  {
+    "id": 9,
+    "category": "policy",
+    "language": "en",
+    "question": "What should I do if my delivery is missing?",
+    "expected_tool": "policy_search",
+    "expected_source": "shipping_policy.md"
+  },
+  {
+    "id": 10,
+    "category": "policy",
+    "language": "en",
+    "question": "What customer information does Boreal Marche use?",
+    "expected_tool": "policy_search",
+    "expected_source": "privacy_policy.md"
+  },
+  {
+    "id": 11,
+    "category": "policy",
+    "language": "en",
+    "question": "Can I request a review of an automated decision?",
+    "expected_tool": "policy_search",
+    "expected_source": "privacy_policy.md"
+  },
+  {
+    "id": 12,
+    "category": "policy",
+    "language": "en",
+    "question": "Can customers request correction of their information?",
+    "expected_tool": "policy_search",
+    "expected_source": "privacy_policy.md"
+  },
+  {
+    "id": 13,
+    "category": "policy",
+    "language": "en",
+    "question": "Who can participate in the loyalty program?",
+    "expected_tool": "policy_search",
+    "expected_source": "loyalty_policy.md"
+  },
+  {
+    "id": 14,
+    "category": "policy",
+    "language": "en",
+    "question": "Can I use more than one coupon on the same order?",
+    "expected_tool": "policy_search",
+    "expected_source": "loyalty_policy.md"
+  },
+  {
+    "id": 15,
+    "category": "policy",
+    "language": "en",
+    "question": "What happens to loyalty points when an order is refunded?",
+    "expected_tool": "policy_search",
+    "expected_source": "loyalty_policy.md"
+  },
+
+  {
+    "id": 16,
+    "category": "tool",
+    "language": "en",
+    "question": "What is the return probability for customer 12346?",
+    "expected_tool": "retention"
+  },
+  {
+    "id": 17,
+    "category": "tool",
+    "language": "en",
+    "question": "Is customer 12346 at risk of not returning?",
+    "expected_tool": "retention"
+  },
+  {
+    "id": 18,
+    "category": "tool",
+    "language": "en",
+    "question": "Give me the retention score for customer 12346.",
+    "expected_tool": "retention"
+  },
+  {
+    "id": 19,
+    "category": "tool",
+    "language": "en",
+    "question": "Recommend products for a basket containing product 22748.",
+    "expected_tool": "recommendation"
+  },
+  {
+    "id": 20,
+    "category": "tool",
+    "language": "en",
+    "question": "What should I recommend with product 22748?",
+    "expected_tool": "recommendation"
+  },
+  {
+    "id": 21,
+    "category": "tool",
+    "language": "en",
+    "question": "Suggest products for my basket.",
+    "expected_tool": "recommendation"
+  },
+  {
+    "id": 22,
+    "category": "tool",
+    "language": "en",
+    "question": "What is product 22745?",
+    "expected_tool": "product_lookup"
+  },
+  {
+    "id": 23,
+    "category": "tool",
+    "language": "en",
+    "question": "Show me the description of product 22745.",
+    "expected_tool": "product_lookup"
+  },
+  {
+    "id": 24,
+    "category": "tool",
+    "language": "en",
+    "question": "Look up stock code 22745.",
+    "expected_tool": "product_lookup"
+  },
+  {
+    "id": 25,
+    "category": "tool",
+    "language": "en",
+    "question": "Find information about product ID 22745.",
+    "expected_tool": "product_lookup"
+  },
+
+  {
+    "id": 26,
+    "category": "out_of_scope",
+    "language": "en",
+    "question": "What is the weather in Montreal?",
+    "expected_tool": "out_of_scope"
+  },
+  {
+    "id": 27,
+    "category": "out_of_scope",
+    "language": "en",
+    "question": "Who is the prime minister of Canada?",
+    "expected_tool": "out_of_scope"
+  },
+  {
+    "id": 28,
+    "category": "out_of_scope",
+    "language": "en",
+    "question": "Write me a poem about winter.",
+    "expected_tool": "out_of_scope"
+  },
+  {
+    "id": 29,
+    "category": "out_of_scope",
+    "language": "en",
+    "question": "What is the capital of France?",
+    "expected_tool": "out_of_scope"
+  },
+  {
+    "id": 30,
+    "category": "out_of_scope",
+    "language": "en",
+    "question": "Tell me today's hockey score.",
+    "expected_tool": "out_of_scope"
+  },
+  {
+    "id": 31,
+    "category": "out_of_scope",
+    "language": "en",
+    "question": "How do I repair my car?",
+    "expected_tool": "out_of_scope"
+  },
+  {
+    "id": 32,
+    "category": "out_of_scope",
+    "language": "en",
+    "question": "Give me a recipe for pizza.",
+    "expected_tool": "out_of_scope"
+  },
+  {
+    "id": 33,
+    "category": "out_of_scope",
+    "language": "en",
+    "question": "Explain quantum physics to me.",
+    "expected_tool": "out_of_scope"
+  },
+
+  {
+    "id": 34,
+    "category": "french",
+    "language": "fr",
+    "question": "Combien de jours ai-je pour retourner un produit admissible ?",
+    "expected_tool": "policy_search",
+    "expected_source": "returns_policy.md"
+  },
+  {
+    "id": 35,
+    "category": "french",
+    "language": "fr",
+    "question": "Combien de temps faut-il normalement pour recevoir un remboursement ?",
+    "expected_tool": "policy_search",
+    "expected_source": "returns_policy.md"
+  },
+  {
+    "id": 36,
+    "category": "french",
+    "language": "fr",
+    "question": "Que dois-je faire si ma commande est endommagée ?",
+    "expected_tool": "policy_search",
+    "expected_source": "returns_policy.md"
+  },
+  {
+    "id": 37,
+    "category": "french",
+    "language": "fr",
+    "question": "Combien de temps prend normalement la livraison ?",
+    "expected_tool": "policy_search",
+    "expected_source": "shipping_policy.md"
+  },
+  {
+    "id": 38,
+    "category": "french",
+    "language": "fr",
+    "question": "Puis-je demander une révision d'une décision automatisée ?",
+    "expected_tool": "policy_search",
+    "expected_source": "privacy_policy.md"
+  },
+  {
+    "id": 39,
+    "category": "french",
+    "language": "fr",
+    "question": "Puis-je utiliser plusieurs coupons sur la même commande ?",
+    "expected_tool": "policy_search",
+    "expected_source": "loyalty_policy.md"
+  },
+  {
+    "id": 40,
+    "category": "french",
+    "language": "fr",
+    "question": "Que deviennent mes points de fidélité si ma commande est remboursée ?",
+    "expected_tool": "policy_search",
+    "expected_source": "loyalty_policy.md"
+  }
+]

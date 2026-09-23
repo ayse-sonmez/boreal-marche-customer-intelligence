@@ -1,0 +1,17 @@
+{
+  "evaluation": "temporal_holdout",
+  "cutoff_date": "2011-09-11 15:50:00",
+  "training_rows": 626914,
+  "test_rows": 156726,
+  "training_rules": 302,
+  "top_k": 5,
+  "evaluated_baskets": 6614,
+  "rule_hit_rate_at_5": 0.050347747202902936,
+  "popularity_hit_rate_at_5": 0.021620804354399756,
+  "coverage": 0.03449419568822554,
+  "parameters": {
+    "min_support": 0.01,
+    "min_confidence": 0.2,
+    "min_lift": 1.1
+  }
+}

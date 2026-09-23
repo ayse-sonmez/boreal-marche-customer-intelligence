@@ -1,0 +1,85 @@
+{
+  "support_values": [
+    0.005,
+    0.01,
+    0.02
+  ],
+  "confidence_values": [
+    0.2,
+    0.4,
+    0.6
+  ],
+  "minimum_lift": 1.1,
+  "sweep_results": [
+    {
+      "min_support": 0.005,
+      "min_confidence": 0.2,
+      "frequent_itemsets": 2230,
+      "simple_rules_before_lift": 1206,
+      "rules_after_lift_filter": 1206
+    },
+    {
+      "min_support": 0.005,
+      "min_confidence": 0.4,
+      "frequent_itemsets": 2230,
+      "simple_rules_before_lift": 526,
+      "rules_after_lift_filter": 526
+    },
+    {
+      "min_support": 0.005,
+      "min_confidence": 0.6,
+      "frequent_itemsets": 2230,
+      "simple_rules_before_lift": 136,
+      "rules_after_lift_filter": 136
+    },
+    {
+      "min_support": 0.01,
+      "min_confidence": 0.2,
+      "frequent_itemsets": 662,
+      "simple_rules_before_lift": 284,
+      "rules_after_lift_filter": 284
+    },
+    {
+      "min_support": 0.01,
+      "min_confidence": 0.4,
+      "frequent_itemsets": 662,
+      "simple_rules_before_lift": 160,
+      "rules_after_lift_filter": 160
+    },
+    {
+      "min_support": 0.01,
+      "min_confidence": 0.6,
+      "frequent_itemsets": 662,
+      "simple_rules_before_lift": 34,
+      "rules_after_lift_filter": 34
+    },
+    {
+      "min_support": 0.02,
+      "min_confidence": 0.2,
+      "frequent_itemsets": 155,
+      "simple_rules_before_lift": 26,
+      "rules_after_lift_filter": 26
+    },
+    {
+      "min_support": 0.02,
+      "min_confidence": 0.4,
+      "frequent_itemsets": 155,
+      "simple_rules_before_lift": 16,
+      "rules_after_lift_filter": 16
+    },
+    {
+      "min_support": 0.02,
+      "min_confidence": 0.6,
+      "frequent_itemsets": 155,
+      "simple_rules_before_lift": 4,
+      "rules_after_lift_filter": 4
+    }
+  ],
+  "selected_production_parameters": {
+    "min_support": 0.01,
+    "min_confidence": 0.2,
+    "min_lift": 1.1,
+    "reason": "Selected as a simple balance between rule coverage and rule quality."
+  },
+  "discarded_low_lift_example": null
+}

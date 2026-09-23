@@ -1,0 +1,14 @@
+{
+  "method": "FP-Growth",
+  "input_rows": 783640,
+  "transactions": 43893,
+  "products": 4636,
+  "min_support": 0.01,
+  "min_confidence": 0.2,
+  "min_lift": 1.1,
+  "runtime_seconds": 3.3431621000054292,
+  "frequent_itemsets": 662,
+  "rules_before_filter": 412,
+  "final_rules": 284,
+  "source_data_sha256": "e31d540c691661b67d4c5b1ca489152397016690e6d952ac41a8ea20bc682dd2"
+}

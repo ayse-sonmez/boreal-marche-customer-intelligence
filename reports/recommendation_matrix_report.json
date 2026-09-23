@@ -1,0 +1,14 @@
+{
+  "transactions": 43893,
+  "products": 4636,
+  "matrix_shape": [
+    43893,
+    4636
+  ],
+  "total_cells": 203487948,
+  "non_zero_cells": 783640,
+  "density": 0.0038510388831480085,
+  "dense_memory_mb_uint8": 194.06122970581055,
+  "sparse_memory_mb": 3.9041290283203125,
+  "memory_reduction_percent": 97.98819731574471
+}

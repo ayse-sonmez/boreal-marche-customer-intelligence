@@ -62,3 +62,8 @@ Thumbs.db
 *.temp
 # Local MLflow database
 mlflow.db
+# Generated recommendation / RAG artifacts
+artifacts/index/
+artifacts/recommendation_basket_matrix.npz
+artifacts/recommendation_products.json
+artifacts/recommendation_transactions.json

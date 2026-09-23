@@ -1,0 +1,11 @@
+{
+  "purpose": "Apriori demonstration and timing. FP-Growth will be used for production mining.",
+  "input_rows": 783640,
+  "products_used": 500,
+  "basket_transactions": 38817,
+  "basket_products": 500,
+  "min_support": 0.02,
+  "max_itemset_length": 3,
+  "runtime_seconds": 7.246754500025418,
+  "frequent_itemsets_found": 212
+}
