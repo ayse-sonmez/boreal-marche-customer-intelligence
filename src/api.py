@@ -1,10 +1,14 @@
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
+
 import json
 import platform
+import sqlite3
 
 import joblib
 import pandas as pd
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -14,8 +18,13 @@ from .rag.agent import AgentRequest, run_agent
 MODEL_PATH = Path("artifacts/model.joblib")
 META_PATH = Path("artifacts/model_meta.json")
 RULES_PATH = Path("artifacts/rules.json")
+
 FEATURES_PATH = Path(
     "data/processed/customer_features_gold.parquet"
+)
+
+PREDICTION_LOG_DB = Path(
+    "data/prediction_logs.db"
 )
 
 
@@ -33,6 +42,7 @@ chat_count = 0
 # ---------------------------------------------------------
 # Request / response models
 # ---------------------------------------------------------
+
 
 class CustomerRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -97,8 +107,81 @@ class ChatResponse(BaseModel):
 
 
 # ---------------------------------------------------------
+# Prediction logging
+# ---------------------------------------------------------
+
+
+def initialise_prediction_log_db():
+    """
+    Create the local prediction log database and table.
+    """
+
+    PREDICTION_LOG_DB.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    with sqlite3.connect(
+        PREDICTION_LOG_DB
+    ) as connection:
+
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS prediction_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp_utc TEXT NOT NULL,
+                customer_id INTEGER NOT NULL,
+                return_probability REAL NOT NULL,
+                threshold REAL NOT NULL,
+                at_risk INTEGER NOT NULL,
+                model_version TEXT
+            )
+            """
+        )
+
+
+def log_prediction(
+    prediction: PredictionResponse,
+):
+    """
+    Store one structured prediction record.
+    """
+
+    with sqlite3.connect(
+        PREDICTION_LOG_DB
+    ) as connection:
+
+        connection.execute(
+            """
+            INSERT INTO prediction_logs (
+                timestamp_utc,
+                customer_id,
+                return_probability,
+                threshold,
+                at_risk,
+                model_version
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                datetime.now(
+                    timezone.utc
+                ).isoformat(),
+                prediction.customer_id,
+                prediction.return_probability,
+                prediction.threshold,
+                int(prediction.at_risk),
+                model_meta.get(
+                    "model_version"
+                ),
+            ),
+        )
+
+
+# ---------------------------------------------------------
 # Load artifacts once
 # ---------------------------------------------------------
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -110,27 +193,39 @@ async def lifespan(app: FastAPI):
 
     print("Loading API artifacts...")
 
-    model = joblib.load(MODEL_PATH)
+    model = joblib.load(
+        MODEL_PATH
+    )
 
     with open(
         META_PATH,
         "r",
         encoding="utf-8",
     ) as file:
-        model_meta = json.load(file)
+
+        model_meta = json.load(
+            file
+        )
 
     with open(
         RULES_PATH,
         "r",
         encoding="utf-8",
     ) as file:
-        rules_data = json.load(file)
 
-    rules = rules_data["rules"]
+        rules_data = json.load(
+            file
+        )
+
+    rules = rules_data[
+        "rules"
+    ]
 
     customer_features = pd.read_parquet(
         FEATURES_PATH
     )
+
+    initialise_prediction_log_db()
 
     print("API artifacts loaded.")
 
@@ -154,6 +249,7 @@ app = FastAPI(
 # ---------------------------------------------------------
 # Helper: prediction
 # ---------------------------------------------------------
+
 
 def predict_customer(
     customer_id: int,
@@ -206,7 +302,7 @@ def predict_customer(
             threshold_value
         )
 
-    return PredictionResponse(
+    prediction = PredictionResponse(
         customer_id=customer_id,
         return_probability=probability,
         threshold=threshold,
@@ -215,10 +311,17 @@ def predict_customer(
         ),
     )
 
+    log_prediction(
+        prediction
+    )
+
+    return prediction
+
 
 # ---------------------------------------------------------
 # Health
 # ---------------------------------------------------------
+
 
 @app.get("/health")
 def health():
@@ -231,6 +334,7 @@ def health():
 # ---------------------------------------------------------
 # Readiness
 # ---------------------------------------------------------
+
 
 @app.get("/ready")
 def ready():
@@ -260,6 +364,7 @@ def ready():
 # Version
 # ---------------------------------------------------------
 
+
 @app.get("/version")
 def version():
 
@@ -285,6 +390,7 @@ def version():
 # Prediction
 # ---------------------------------------------------------
 
+
 @app.post(
     "/predict",
     response_model=PredictionResponse,
@@ -308,6 +414,7 @@ def predict(
 # Batch prediction
 # ---------------------------------------------------------
 
+
 @app.post(
     "/predict/batch",
     response_model=BatchPredictionResponse,
@@ -325,10 +432,8 @@ def predict_batch(
 
     for customer_id in request.customer_ids:
 
-        prediction = (
-            predict_customer(
-                customer_id
-            )
+        prediction = predict_customer(
+            customer_id
         )
 
         predictions.append(
@@ -345,6 +450,7 @@ def predict_batch(
 # ---------------------------------------------------------
 # Recommendation
 # ---------------------------------------------------------
+
 
 @app.post(
     "/recommend",
@@ -453,6 +559,7 @@ def recommend(
 # Chat
 # ---------------------------------------------------------
 
+
 @app.post(
     "/chat",
     response_model=ChatResponse,
@@ -498,6 +605,7 @@ def chat(
 # ---------------------------------------------------------
 # Metrics
 # ---------------------------------------------------------
+
 
 @app.get("/metrics")
 def metrics():

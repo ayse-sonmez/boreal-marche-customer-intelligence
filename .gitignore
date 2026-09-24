@@ -67,3 +67,5 @@ artifacts/index/
 artifacts/recommendation_basket_matrix.npz
 artifacts/recommendation_products.json
 artifacts/recommendation_transactions.json
+# Local prediction logs
+data/prediction_logs.db
