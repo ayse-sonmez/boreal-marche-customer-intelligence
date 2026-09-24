@@ -1,10 +1,18 @@
+import re
+
 from pydantic import BaseModel, ConfigDict
 
-from tools import (
+from .tools import (
     PolicySearchRequest,
+    RetentionRequest,
+    RecommendationRequest,
+    ProductLookupRequest,
     policy_search,
+    retention_score,
+    recommendations,
+    product_lookup,
 )
-from providers import get_provider
+from .providers import get_provider
 
 
 SIMILARITY_FLOOR = 0.45
@@ -116,9 +124,6 @@ def choose_tool(question: str) -> str:
 def check_privacy(question: str) -> bool:
     """
     Simple privacy guardrail.
-
-    The assistant should not provide another
-    customer's private information.
     """
 
     text = question.lower()
@@ -129,12 +134,24 @@ def check_privacy(question: str) -> bool:
         "someone else's",
         "other person's",
         "un autre client",
-        "un autre client",
     ]
 
     return any(
         pattern in text
         for pattern in privacy_patterns
+    )
+
+
+def extract_numbers(
+    question: str,
+) -> list[str]:
+    """
+    Extract numeric IDs from the question.
+    """
+
+    return re.findall(
+        r"\b\d+\b",
+        question,
     )
 
 
@@ -164,9 +181,7 @@ def run_agent(
     # Choose tool
     # -----------------------------------------------------
 
-    tool = choose_tool(
-        question
-    )
+    tool = choose_tool(question)
 
     # -----------------------------------------------------
     # Out-of-scope guardrail
@@ -217,7 +232,6 @@ def run_agent(
             result.results[0].similarity
         )
 
-        # Similarity-floor guardrail
         if (
             best_similarity
             < SIMILARITY_FLOOR
@@ -264,42 +278,162 @@ def run_agent(
         )
 
     # -----------------------------------------------------
-    # Other tools
-    #
-    # Tool selection is ready.
-    # API connection will be added when FastAPI is built.
+    # Retention tool
     # -----------------------------------------------------
 
     if tool == "retention":
 
+        numbers = extract_numbers(
+            question
+        )
+
+        if not numbers:
+
+            return AgentResponse(
+                answer=(
+                    "Please provide a customer ID "
+                    "for the retention prediction."
+                ),
+                tool_used="retention",
+                citations=[],
+            )
+
+        customer_id = int(
+            numbers[0]
+        )
+
+        result = retention_score(
+            RetentionRequest(
+                customer_id=customer_id
+            )
+        )
+
+        risk_text = (
+            "at risk"
+            if result.at_risk
+            else "not at risk"
+        )
+
+        answer = (
+            f"Customer {result.customer_id} "
+            f"has a return probability of "
+            f"{result.return_probability:.1%}. "
+            f"The decision threshold is "
+            f"{result.threshold:.0%}, so the "
+            f"customer is {risk_text}."
+        )
+
         return AgentResponse(
-            answer=(
-                "The retention tool was selected. "
-                "It will call the retention API "
-                "when the FastAPI service is connected."
-            ),
+            answer=answer,
             tool_used="retention",
             citations=[],
         )
 
+    # -----------------------------------------------------
+    # Recommendation tool
+    # -----------------------------------------------------
+
     if tool == "recommendation":
 
+        numbers = extract_numbers(
+            question
+        )
+
+        if not numbers:
+
+            return AgentResponse(
+                answer=(
+                    "Please provide at least one "
+                    "product ID for the basket."
+                ),
+                tool_used="recommendation",
+                citations=[],
+            )
+
+        result = recommendations(
+            RecommendationRequest(
+                basket=numbers,
+                top_k=5,
+            )
+        )
+
+        if not result.recommendations:
+
+            return AgentResponse(
+                answer=(
+                    "I could not find a matching "
+                    "recommendation for this basket."
+                ),
+                tool_used="recommendation",
+                citations=[],
+            )
+
+        lines = []
+
+        for item in result.recommendations:
+
+            lines.append(
+                f"{item.product} because "
+                f"the basket contains "
+                f"{item.because_product}"
+            )
+
+        answer = (
+            "Recommended product(s): "
+            + "; ".join(lines)
+            + "."
+        )
+
         return AgentResponse(
-            answer=(
-                "The recommendation tool was selected. "
-                "It will call the recommendation API "
-                "when the FastAPI service is connected."
-            ),
+            answer=answer,
             tool_used="recommendation",
             citations=[],
         )
 
+    # -----------------------------------------------------
+    # Product lookup tool
+    # -----------------------------------------------------
+
     if tool == "product_lookup":
+
+        numbers = extract_numbers(
+            question
+        )
+
+        if not numbers:
+
+            return AgentResponse(
+                answer=(
+                    "Please provide a product ID "
+                    "or stock code."
+                ),
+                tool_used="product_lookup",
+                citations=[],
+            )
+
+        product_id = numbers[0]
+
+        result = product_lookup(
+            ProductLookupRequest(
+                product_id=product_id
+            )
+        )
+
+        if not result.found:
+
+            return AgentResponse(
+                answer=(
+                    f"Product {product_id} "
+                    "was not found."
+                ),
+                tool_used="product_lookup",
+                citations=[],
+            )
 
         return AgentResponse(
             answer=(
-                "The product lookup tool "
-                "was selected."
+                f"Product {result.product_id}: "
+                f"{result.description}."
             ),
             tool_used="product_lookup",
             citations=[],
@@ -313,9 +447,24 @@ def run_agent(
 def main():
 
     tests = [
-        "How many days do I have to return a product?",
+        (
+            "How many days do I have "
+            "to return a product?"
+        ),
+        "Is customer 12346 at risk?",
+        (
+            "Recommend a product for "
+            "basket 22748."
+        ),
+        (
+            "What is the description "
+            "of product 22745?"
+        ),
         "What is the weather in Montreal?",
-        "Show me another customer's private information.",
+        (
+            "Show me another customer's "
+            "private information."
+        ),
     ]
 
     for question in tests:

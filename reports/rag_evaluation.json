@@ -1,0 +1,306 @@
+{
+  "provider": "rule",
+  "questions_evaluated": 22,
+  "correct_source_citations": 20,
+  "source_groundedness": 0.9090909090909091,
+  "average_latency_ms": 29.5,
+  "cost_per_query_usd": 0.0,
+  "cost_note": "The rule baseline does not call a paid language model, so its provider cost is $0 per query.",
+  "groundedness_note": "For this baseline evaluation, groundedness is measured by whether the expected source document appears in the citations.",
+  "results": [
+    {
+      "id": 1,
+      "language": "en",
+      "question": "How many days do I have to return an eligible product?",
+      "expected_source": "returns_policy.md",
+      "citations": [
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 58.72,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 2,
+      "language": "en",
+      "question": "Can I return a product after 30 days?",
+      "expected_source": "returns_policy.md",
+      "citations": [
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 30.04,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 3,
+      "language": "en",
+      "question": "How long does a refund normally take?",
+      "expected_source": "returns_policy.md",
+      "citations": [
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 31.55,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 4,
+      "language": "en",
+      "question": "What should I do if my order arrives damaged?",
+      "expected_source": "returns_policy.md",
+      "citations": [
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 32.19,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 5,
+      "language": "en",
+      "question": "Are original delivery fees refundable?",
+      "expected_source": "returns_policy.md",
+      "citations": [
+        "returns_policy.md",
+        "shipping_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 29.06,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 6,
+      "language": "en",
+      "question": "How long does order preparation normally take?",
+      "expected_source": "shipping_policy.md",
+      "citations": [
+        "shipping_policy.md",
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 31.04,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 7,
+      "language": "en",
+      "question": "How long does delivery normally take?",
+      "expected_source": "shipping_policy.md",
+      "citations": [
+        "shipping_policy.md",
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 30.12,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 8,
+      "language": "en",
+      "question": "Where can I see my shipping fees?",
+      "expected_source": "shipping_policy.md",
+      "citations": [
+        "shipping_policy.md",
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 30.34,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 9,
+      "language": "en",
+      "question": "What should I do if my delivery is missing?",
+      "expected_source": "shipping_policy.md",
+      "citations": [
+        "shipping_policy.md",
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 24.46,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 10,
+      "language": "en",
+      "question": "What customer information does Boreal Marche use?",
+      "expected_source": "privacy_policy.md",
+      "citations": [
+        "privacy_policy.md",
+        "product_catalogue.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 24.14,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 11,
+      "language": "en",
+      "question": "Can I request a review of an automated decision?",
+      "expected_source": "privacy_policy.md",
+      "citations": [
+        "privacy_policy.md",
+        "shipping_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 28.56,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 12,
+      "language": "en",
+      "question": "Can customers request correction of their information?",
+      "expected_source": "privacy_policy.md",
+      "citations": [
+        "privacy_policy.md",
+        "loyalty_policy.md",
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 27.51,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 13,
+      "language": "en",
+      "question": "Who can participate in the loyalty program?",
+      "expected_source": "loyalty_policy.md",
+      "citations": [
+        "loyalty_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 25.12,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 14,
+      "language": "en",
+      "question": "Can I use more than one coupon on the same order?",
+      "expected_source": "loyalty_policy.md",
+      "citations": [
+        "loyalty_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 24.13,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 15,
+      "language": "en",
+      "question": "What happens to loyalty points when an order is refunded?",
+      "expected_source": "loyalty_policy.md",
+      "citations": [
+        "loyalty_policy.md",
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 28.22,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 34,
+      "language": "fr",
+      "question": "Combien de jours ai-je pour retourner un produit admissible ?",
+      "expected_source": "returns_policy.md",
+      "citations": [
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 29.5,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 35,
+      "language": "fr",
+      "question": "Combien de temps faut-il normalement pour recevoir un remboursement ?",
+      "expected_source": "returns_policy.md",
+      "citations": [
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 29.34,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 36,
+      "language": "fr",
+      "question": "Que dois-je faire si ma commande est endommagée ?",
+      "expected_source": "returns_policy.md",
+      "citations": [],
+      "source_grounded": false,
+      "latency_ms": 25.94,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 37,
+      "language": "fr",
+      "question": "Combien de temps prend normalement la livraison ?",
+      "expected_source": "shipping_policy.md",
+      "citations": [
+        "shipping_policy.md",
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 29.41,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 38,
+      "language": "fr",
+      "question": "Puis-je demander une révision d'une décision automatisée ?",
+      "expected_source": "privacy_policy.md",
+      "citations": [
+        "privacy_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 26.04,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 39,
+      "language": "fr",
+      "question": "Puis-je utiliser plusieurs coupons sur la même commande ?",
+      "expected_source": "loyalty_policy.md",
+      "citations": [],
+      "source_grounded": false,
+      "latency_ms": 23.68,
+      "provider": "rule",
+      "cost_usd": 0.0
+    },
+    {
+      "id": 40,
+      "language": "fr",
+      "question": "Que deviennent mes points de fidélité si ma commande est remboursée ?",
+      "expected_source": "loyalty_policy.md",
+      "citations": [
+        "loyalty_policy.md",
+        "returns_policy.md"
+      ],
+      "source_grounded": true,
+      "latency_ms": 29.99,
+      "provider": "rule",
+      "cost_usd": 0.0
+    }
+  ]
+}

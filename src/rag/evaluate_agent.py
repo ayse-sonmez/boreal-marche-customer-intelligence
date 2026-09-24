@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from agent import (
+from .agent import (
     AgentRequest,
     choose_tool,
     run_agent,
