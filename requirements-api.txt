@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic
+pandas
+pyarrow
+scikit-learn==1.9.0
+joblib
+numpy
+requests
+faiss-cpu
+transformers
+huggingface-hub
+sentence-transformers

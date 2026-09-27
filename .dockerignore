@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# IDE
+.vscode
+.idea
+
+# Raw data and DVC
+data/raw
+*.dvc
+.dvc
+
+# Local databases and logs
+data/prediction_logs.db
+mlflow.db
+*.log
+
+# Notebooks and reports
+notebooks
+reports
+
+# Frontend - API image does not need it
+frontend
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project documentation not needed by runtime
+README.md
+ARCHITECTURE.md
+MODEL_CARD.md
+DATA_CARD.md
+GOVERNANCE_LOI25.md
+
+# Misc
+Version_1.zip
