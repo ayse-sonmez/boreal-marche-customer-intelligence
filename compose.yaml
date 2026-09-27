@@ -1,0 +1,17 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    image: boreal-marche-api:cpu
+    container_name: boreal-marche-api
+    ports:
+      - "8000:8000"
+    environment:
+      API_BASE_URL: http://localhost:8000
+    volumes:
+      - prediction-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  prediction-data:
