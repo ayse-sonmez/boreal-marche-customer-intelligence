@@ -39,6 +39,7 @@ mlartifacts/
 # Model artifacts
 *.pkl
 *.joblib
+!artifacts/model.joblib
 
 # Logs
 *.log
