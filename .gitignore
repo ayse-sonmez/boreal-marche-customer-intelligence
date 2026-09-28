@@ -25,6 +25,11 @@ data/processed/
 *.xls
 *.parquet
 
+# Allow only the Gold feature artifact required by API/CI
+!data/processed/
+data/processed/*
+!data/processed/customer_features_gold.parquet
+
 # Allow DVC metadata files
 !*.dvc
 !data/raw/*.dvc
