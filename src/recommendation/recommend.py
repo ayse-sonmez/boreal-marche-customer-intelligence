@@ -1,6 +1,5 @@
-from pathlib import Path
 import json
-
+from pathlib import Path
 
 RULES_PATH = Path(
     "artifacts/rules.json"

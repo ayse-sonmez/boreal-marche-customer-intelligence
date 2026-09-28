@@ -4,7 +4,6 @@ from pathlib import Path
 
 from agent import AgentRequest, run_agent
 
-
 GOLDEN_SET_PATH = Path(
     "tests/golden_questions.json"
 )

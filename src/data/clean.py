@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pandas as pd
 
-
 INPUT_PATH = Path("data/processed/online_retail_ii.parquet")
 OUTPUT_PATH = Path("data/processed/online_retail_ii_silver.parquet")
 REPORT_PATH = Path("reports/cleaning_report.json")

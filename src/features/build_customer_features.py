@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pandas as pd
 
-
 INPUT_PATH = Path("data/processed/online_retail_ii_silver.parquet")
 OUTPUT_PATH = Path("data/processed/customer_features_gold.parquet")
 

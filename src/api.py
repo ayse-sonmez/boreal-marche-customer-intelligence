@@ -1,19 +1,16 @@
+import json
+import platform
+import sqlite3
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
-import json
-import platform
-import sqlite3
-
 import joblib
 import pandas as pd
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
 from .rag.agent import AgentRequest, run_agent
-
 
 MODEL_PATH = Path("artifacts/model.joblib")
 META_PATH = Path("artifacts/model_meta.json")

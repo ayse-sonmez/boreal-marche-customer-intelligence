@@ -1,9 +1,8 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
 import pandas as pd
 from scipy.sparse import csr_matrix, save_npz
-
 
 INPUT_PATH = Path(
     "data/processed/recommendation_transactions.parquet"

@@ -10,7 +10,6 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 
-
 DATA_PATH = Path("data/processed/customer_features_gold.parquet")
 
 

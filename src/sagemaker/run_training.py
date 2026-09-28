@@ -1,6 +1,5 @@
 from sagemaker.core import image_uris
 from sagemaker.core.helper.session_helper import Session
-from sagemaker.train import ModelTrainer
 from sagemaker.train.configs import (
     Compute,
     InputData,
@@ -8,6 +7,7 @@ from sagemaker.train.configs import (
     StoppingCondition,
 )
 
+from sagemaker.train import ModelTrainer
 
 REGION = "ca-central-1"
 

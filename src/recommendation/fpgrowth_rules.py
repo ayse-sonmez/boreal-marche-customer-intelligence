@@ -1,15 +1,14 @@
-from pathlib import Path
 import hashlib
 import json
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 
 import pandas as pd
 from mlxtend.frequent_patterns import (
-    fpgrowth,
     association_rules,
+    fpgrowth,
 )
-
 
 INPUT_PATH = Path(
     "data/processed/recommendation_transactions.parquet"
@@ -271,9 +270,7 @@ def main():
             "product_count": int(
                 basket.shape[1]
             ),
-            "rule_count": int(
-                len(exported_rules)
-            ),
+            "rule_count": len(exported_rules),
         },
         "rules": exported_rules,
     }
@@ -305,9 +302,7 @@ def main():
 
     report = {
         "method": "FP-Growth",
-        "input_rows": int(
-            len(df)
-        ),
+        "input_rows": len(df),
         "transactions": int(
             basket.shape[0]
         ),
@@ -326,15 +321,11 @@ def main():
         "runtime_seconds": float(
             runtime
         ),
-        "frequent_itemsets": int(
-            len(frequent_itemsets)
-        ),
+        "frequent_itemsets": len(frequent_itemsets),
         "rules_before_filter": int(
             rules_before_filter
         ),
-        "final_rules": int(
-            len(rules)
-        ),
+        "final_rules": len(rules),
         "source_data_sha256": (
             source_hash
         ),

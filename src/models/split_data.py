@@ -3,7 +3,6 @@ from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-
 DATA_PATH = Path("data/processed/customer_features_gold.parquet")
 TRAIN_PATH = Path("data/processed/customer_features_train.parquet")
 TEST_PATH = Path("data/processed/customer_features_test.parquet")

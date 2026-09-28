@@ -7,7 +7,6 @@ from .agent import (
     run_agent,
 )
 
-
 GOLDEN_SET_PATH = Path(
     "tests/golden_questions.json"
 )

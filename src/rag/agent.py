@@ -2,18 +2,17 @@ import re
 
 from pydantic import BaseModel, ConfigDict
 
+from .providers import get_provider
 from .tools import (
     PolicySearchRequest,
-    RetentionRequest,
-    RecommendationRequest,
     ProductLookupRequest,
+    RecommendationRequest,
+    RetentionRequest,
     policy_search,
-    retention_score,
-    recommendations,
     product_lookup,
+    recommendations,
+    retention_score,
 )
-from .providers import get_provider
-
 
 SIMILARITY_FLOOR = 0.45
 

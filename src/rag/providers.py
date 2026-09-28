@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 
 import requests
 
-
 # ---------------------------------------------------------
 # Common provider interface
 # ---------------------------------------------------------

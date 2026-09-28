@@ -1,15 +1,14 @@
-from pathlib import Path
 import json
 import platform
 import subprocess
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
 import sklearn
-
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import GradientBoostingClassifier
@@ -21,7 +20,6 @@ from sklearn.metrics import (
 )
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-
 
 TRAIN_PATH = Path(
     "data/processed/customer_features_train.parquet"
@@ -426,12 +424,8 @@ def main():
             "GradientBoostingClassifier"
         ),
         "calibration": "sigmoid",
-        "training_rows": int(
-            len(train_df)
-        ),
-        "test_rows": int(
-            len(test_df)
-        ),
+        "training_rows": len(train_df),
+        "test_rows": len(test_df),
         "feature_count": int(
             X_train.shape[1]
         ),

@@ -1,16 +1,14 @@
-from pathlib import Path
 import time
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
-
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import (
     average_precision_score,
     brier_score_loss,
     roc_auc_score,
 )
-
 
 TRAIN_PATH = Path(
     "data/processed/customer_features_train.parquet"

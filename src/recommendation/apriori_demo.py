@@ -1,10 +1,9 @@
-from pathlib import Path
 import json
 import time
+from pathlib import Path
 
 import pandas as pd
 from mlxtend.frequent_patterns import apriori
-
 
 INPUT_PATH = Path(
     "data/processed/recommendation_transactions.parquet"
@@ -139,10 +138,8 @@ def main():
             "Apriori demonstration and timing. "
             "FP-Growth will be used for production mining."
         ),
-        "input_rows": int(len(df)),
-        "products_used": int(
-            len(top_products)
-        ),
+        "input_rows": len(df),
+        "products_used": len(top_products),
         "basket_transactions": int(
             basket.shape[0]
         ),
@@ -154,9 +151,7 @@ def main():
         "runtime_seconds": float(
             elapsed_seconds
         ),
-        "frequent_itemsets_found": int(
-            len(frequent_itemsets)
-        ),
+        "frequent_itemsets_found": len(frequent_itemsets),
     }
 
     with open(

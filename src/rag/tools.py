@@ -1,5 +1,5 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
 import faiss
 import numpy as np
@@ -7,7 +7,6 @@ import pandas as pd
 import requests
 from pydantic import BaseModel, ConfigDict, Field
 from sentence_transformers import SentenceTransformer
-
 
 # ---------------------------------------------------------
 # Paths and API

@@ -5,7 +5,6 @@ from pathlib import Path
 import mlflow
 import optuna
 import pandas as pd
-
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.impute import SimpleImputer
@@ -14,7 +13,6 @@ from sklearn.metrics import average_precision_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-
 
 DATA_PATH = Path(
    "data/processed/customer_features_train.parquet"

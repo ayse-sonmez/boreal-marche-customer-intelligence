@@ -1,12 +1,11 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
 import pandas as pd
 from mlxtend.frequent_patterns import (
-    fpgrowth,
     association_rules,
+    fpgrowth,
 )
-
 
 INPUT_PATH = Path(
     "data/processed/recommendation_transactions.parquet"
@@ -381,15 +380,9 @@ def main():
         "cutoff_date": str(
             cutoff
         ),
-        "training_rows": int(
-            len(train)
-        ),
-        "test_rows": int(
-            len(test)
-        ),
-        "training_rules": int(
-            len(rules)
-        ),
+        "training_rows": len(train),
+        "test_rows": len(test),
+        "training_rules": len(rules),
         "top_k": TOP_K,
         "evaluated_baskets": int(
             evaluated
