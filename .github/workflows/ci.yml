@@ -27,6 +27,10 @@ jobs:
 
       - name: Lint
         run: ruff check src tests --ignore ASYNC230,ISC004,BLE001
+      
+      - name: Build RAG index
+        run: python -m src.rag.build_index
 
       - name: Run tests
         run: python -m pytest tests/test_api.py -v
+      
