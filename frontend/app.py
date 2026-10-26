@@ -1,9 +1,10 @@
-import json
+﻿import json
 import requests
 import pandas as pd
 import streamlit as st
 
-API_URL = "http://127.0.0.1:8000"
+import os
+API_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(
     page_title="Boréal Marché",
@@ -180,12 +181,12 @@ translations = {
         "scenario": "Prédiction du scénario",
         "change": "Variation de probabilité",
         "choose_feature": "Sélectionnez au moins une variable à modifier.",
-        "scenario_note": "Résultat hypothétique, pas une estimation causale. L’API ajuste les variables liées. Le scénario n’est pas enregistré comme une prédiction réelle.",
-        "example_note": "Les valeurs d’exemple correspondent uniquement au client 12346. Pour un autre client, saisissez les valeurs à tester.",
+        "scenario_note": "Résultat hypothétique, pas une estimation causale. L'API ajuste les variables liées. Le scénario n'est pas enregistré comme une prédiction réelle.",
+        "example_note": "Les valeurs d'exemple correspondent uniquement au client 12346. Pour un autre client, saisissez les valeurs à tester.",
         "refresh_metrics": "Actualiser les métriques",
         "http_requests": "Requêtes HTTP enregistrées",
         "http_errors": "Erreurs HTTP (4xx/5xx)",
-        "error_rate": "Taux d’erreur HTTP",
+        "error_rate": "Taux d'erreur HTTP",
         "avg_latency": "Latence moyenne",
         "p95_latency": "Latence P95",
         "endpoint_activity": "Requêtes par point de terminaison",
@@ -193,7 +194,7 @@ translations = {
         "endpoint_details": "Détails des points de terminaison",
         "monitor_scope": "Données HTTP cumulatives ; GET /metrics est exclu. Les contrôles de santé Docker sont inclus.",
         "no_metrics": "Aucune requête HTTP enregistrée pour le moment.",
-        "drift_pending": "La dérive PSI/KS et l’évaluation avec étiquettes différées nécessitent une référence valide et suffisamment de données ; elles ne sont pas encore disponibles.",
+        "drift_pending": "La dérive PSI/KS et l'évaluation avec étiquettes différées nécessitent une référence valide et suffisamment de données ; elles ne sont pas encore disponibles.",
         "offline_metrics": "Évaluation hors ligne du modèle (pas des métriques en direct)",
         "drift_title": "Dérive du modèle et résultats différés",
         "offline_drift": "Référence hors ligne : entraînement et test",
@@ -297,19 +298,38 @@ st.markdown(
 )
 
 # --------------------------------------------------
+# CLOUD RUN AUTHENTICATION
+# --------------------------------------------------
+
+def api_headers():
+    """Authenticate server-side requests to a private Cloud Run API."""
+    if not os.getenv("K_SERVICE"):
+        return {}
+
+    import google.auth.transport.requests
+    import google.oauth2.id_token
+
+    token = google.oauth2.id_token.fetch_id_token(
+        google.auth.transport.requests.Request(),
+        API_URL.rstrip("/"),
+    )
+    return {"Authorization": f"Bearer {token}"}
+
+
+# --------------------------------------------------
 # API FUNCTIONS
 # --------------------------------------------------
 
 def get_http_metrics():
     """Fetch live, persisted API monitoring summaries."""
-    response = requests.get(f"{API_URL}/metrics", timeout=20)
+    response = requests.get(f"{API_URL}/metrics", headers=api_headers(), timeout=20)
     response.raise_for_status()
     return response.json()
 
 
 def get_drift_metrics():
     """Read offline PSI/KS, live monitoring sufficiency and alert rules."""
-    response = requests.get(f"{API_URL}/monitoring/drift", timeout=90)
+    response = requests.get(f"{API_URL}/monitoring/drift", headers=api_headers(), timeout=90)
     response.raise_for_status()
     return response.json()
 
@@ -318,6 +338,7 @@ def get_recommendations(basket):
     response = requests.post(
         f"{API_URL}/recommend",
         json={"basket": basket, "top_k": 5},
+        headers=api_headers(),
         timeout=20,
     )
     response.raise_for_status()
@@ -328,6 +349,7 @@ def predict_retention(customer_id):
     response = requests.post(
         f"{API_URL}/predict",
         json={"customer_id": customer_id},
+        headers=api_headers(),
         timeout=20,
     )
     response.raise_for_status()
@@ -338,6 +360,7 @@ def predict_what_if(customer_id, overrides):
     response = requests.post(
         f"{API_URL}/predict/what-if",
         json={"customer_id": customer_id, **overrides},
+        headers=api_headers(),
         timeout=20,
     )
     response.raise_for_status()
@@ -349,7 +372,7 @@ def stream_assistant(question, provider):
     with requests.post(
         f"{API_URL}/chat/stream",
         json={"question": question, "provider": provider},
-        headers={"Accept": "text/event-stream"},
+        headers={**api_headers(), "Accept": "text/event-stream"},
         stream=True,
         timeout=(10, 120),
     ) as response:
@@ -1132,3 +1155,4 @@ st.divider()
 st.caption(
     "© Boréal Marché | Educational AI Capstone Project"
 )
+

@@ -1,4 +1,4 @@
-# Git
+﻿# Git
 .git
 .gitignore
 .github
@@ -31,8 +31,6 @@ mlflow.db
 notebooks
 reports
 
-# Frontend - API image does not need it
-frontend
 
 # Environment / secrets
 .env
