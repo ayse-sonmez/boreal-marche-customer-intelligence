@@ -1,8 +1,7 @@
 import json
+import math
 import platform
 import sqlite3
-import math
-import numpy as np
 import time
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
@@ -10,6 +9,7 @@ from pathlib import Path
 from threading import Lock
 
 import joblib
+import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -234,8 +234,7 @@ def initialise_http_metrics_db():
 def record_http_request(method, endpoint, status_code, duration_ms):
     """Store metadata only: no request bodies, customer IDs or IPs."""
     try:
-        with _metrics_lock:
-            with sqlite3.connect(HTTP_METRICS_DB, timeout=5) as connection:
+        with _metrics_lock, sqlite3.connect(HTTP_METRICS_DB, timeout=5) as connection:
                 connection.execute(
                     """INSERT INTO http_request_logs
                        (timestamp_utc, method, endpoint, status_code, duration_ms)
@@ -366,25 +365,8 @@ async def lifespan(app: FastAPI):
         MODEL_PATH
     )
 
-    with open(
-        META_PATH,
-        "r",
-        encoding="utf-8",
-    ) as file:
-
-        model_meta = json.load(
-            file
-        )
-
-    with open(
-        RULES_PATH,
-        "r",
-        encoding="utf-8",
-    ) as file:
-
-        rules_data = json.load(
-            file
-        )
+    model_meta = json.loads(META_PATH.read_text(encoding="utf-8"))
+    rules_data = json.loads(RULES_PATH.read_text(encoding="utf-8"))
 
     rules = rules_data[
         "rules"

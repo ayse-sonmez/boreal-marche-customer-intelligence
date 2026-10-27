@@ -143,7 +143,7 @@ def get_git_commit():
 
         return result.stdout.strip()
 
-    except Exception:
+    except (OSError, __import__('subprocess').CalledProcessError):
         return "unavailable"
 
 

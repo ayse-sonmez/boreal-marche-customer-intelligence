@@ -63,13 +63,13 @@ def main():
         "",
         "Document type: Product Catalogue",
         "Version: 1.0",
-        "Source: UCI Online Retail II dataset, "
-        "reskinned for the Boréal Marché academic project.",
+        ("Source: UCI Online Retail II dataset, "
+        "reskinned for the Boréal Marché academic project."),
         "",
         "---",
         "",
-        "This catalogue contains product identifiers and "
-        "descriptions from the project dataset.",
+        ("This catalogue contains product identifiers and "
+        "descriptions from the project dataset."),
         "",
     ]
 

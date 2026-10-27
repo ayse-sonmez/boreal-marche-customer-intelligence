@@ -20,7 +20,7 @@ def calculate_metrics(y_true, probabilities, threshold):
     selected_for_offer = probabilities < threshold
 
     return {
-        "n": int(len(y_true)),
+        "n": len(y_true),
         "actual_return_rate": float(np.mean(y_true)),
         "return_recall": float(
             recall_score(y_true, predicted_return, zero_division=0)
@@ -118,7 +118,7 @@ def main():
         "project": "Boreal Marche",
         "model_version": metadata["model_version"],
         "evaluation_dataset": str(TEST_PATH),
-        "test_customers": int(len(df)),
+        "test_customers": len(df),
         "return_probability_threshold": threshold,
         "offer_selection_rule": "return_probability < threshold",
         "gap_threshold_percentage_points": 5,
