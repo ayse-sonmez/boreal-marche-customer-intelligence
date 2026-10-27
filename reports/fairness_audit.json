@@ -1,0 +1,470 @@
+{
+  "project": "Boreal Marche",
+  "model_version": "1.0",
+  "evaluation_dataset": "data\\processed\\customer_features_test.parquet",
+  "test_customers": 1052,
+  "return_probability_threshold": 0.73,
+  "offer_selection_rule": "return_probability < threshold",
+  "gap_threshold_percentage_points": 5,
+  "minimum_group_size_for_gap_comparison": 30,
+  "metric_definitions": {
+    "return_recall": "Recall for actual 90-day returners; positive label is 1.",
+    "return_precision": "Precision for predicted 90-day returners.",
+    "offer_selection_rate": "Share of customers below the return threshold and therefore selected for a hypothetical offer."
+  },
+  "audits": {
+    "country": {
+      "groups": [
+        {
+          "n": 4,
+          "actual_return_rate": 0.25,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 0,
+          "group": "Australia",
+          "small_sample": true
+        },
+        {
+          "n": 2,
+          "actual_return_rate": 0.5,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 0,
+          "group": "Austria",
+          "small_sample": true
+        },
+        {
+          "n": 4,
+          "actual_return_rate": 0.25,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 0,
+          "group": "Belgium",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "Canada",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "Channel Islands",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "Cyprus",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 1.0,
+          "return_recall": 1.0,
+          "return_precision": 1.0,
+          "offer_selection_rate": 0.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 1,
+          "group": "Denmark",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 1.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 0,
+          "group": "Finland",
+          "small_sample": true
+        },
+        {
+          "n": 15,
+          "actual_return_rate": 0.6,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 9,
+          "predicted_positive_count": 0,
+          "group": "France",
+          "small_sample": true
+        },
+        {
+          "n": 20,
+          "actual_return_rate": 0.55,
+          "return_recall": 0.6363636363636364,
+          "return_precision": 1.0,
+          "offer_selection_rate": 0.65,
+          "actual_positive_count": 11,
+          "predicted_positive_count": 7,
+          "group": "Germany",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "Greece",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 1.0,
+          "return_recall": 1.0,
+          "return_precision": 1.0,
+          "offer_selection_rate": 0.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 1,
+          "group": "Iceland",
+          "small_sample": true
+        },
+        {
+          "n": 3,
+          "actual_return_rate": 0.3333333333333333,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 0,
+          "group": "Italy",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "Lebanon",
+          "small_sample": true
+        },
+        {
+          "n": 4,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "Netherlands",
+          "small_sample": true
+        },
+        {
+          "n": 3,
+          "actual_return_rate": 0.6666666666666666,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 2,
+          "predicted_positive_count": 0,
+          "group": "Norway",
+          "small_sample": true
+        },
+        {
+          "n": 2,
+          "actual_return_rate": 0.5,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 0,
+          "group": "Poland",
+          "small_sample": true
+        },
+        {
+          "n": 5,
+          "actual_return_rate": 0.4,
+          "return_recall": 0.5,
+          "return_precision": 1.0,
+          "offer_selection_rate": 0.8,
+          "actual_positive_count": 2,
+          "predicted_positive_count": 1,
+          "group": "Portugal",
+          "small_sample": true
+        },
+        {
+          "n": 2,
+          "actual_return_rate": 0.5,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 0,
+          "group": "Spain",
+          "small_sample": true
+        },
+        {
+          "n": 3,
+          "actual_return_rate": 0.3333333333333333,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 0,
+          "group": "Sweden",
+          "small_sample": true
+        },
+        {
+          "n": 2,
+          "actual_return_rate": 0.5,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 0.5,
+          "actual_positive_count": 1,
+          "predicted_positive_count": 1,
+          "group": "Switzerland",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "Thailand",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "USA",
+          "small_sample": true
+        },
+        {
+          "n": 1,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "United Arab Emirates",
+          "small_sample": true
+        },
+        {
+          "n": 970,
+          "actual_return_rate": 0.43608247422680413,
+          "return_recall": 0.3664302600472813,
+          "return_precision": 0.9064327485380117,
+          "offer_selection_rate": 0.8237113402061855,
+          "actual_positive_count": 423,
+          "predicted_positive_count": 171,
+          "group": "United Kingdom",
+          "small_sample": false
+        },
+        {
+          "n": 2,
+          "actual_return_rate": 0.0,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 0,
+          "predicted_positive_count": 0,
+          "group": "Unspecified",
+          "small_sample": true
+        }
+      ],
+      "eligible_group_count": 1,
+      "gaps": {
+        "return_recall": {
+          "gap": null,
+          "exceeds_5_percentage_points": null,
+          "note": "Insufficient groups with at least 30 customers"
+        },
+        "return_precision": {
+          "gap": null,
+          "exceeds_5_percentage_points": null,
+          "note": "Insufficient groups with at least 30 customers"
+        },
+        "offer_selection_rate": {
+          "gap": null,
+          "exceeds_5_percentage_points": null,
+          "note": "Insufficient groups with at least 30 customers"
+        }
+      }
+    },
+    "customer_tenure_quartiles": {
+      "groups": [
+        {
+          "n": 263,
+          "actual_return_rate": 0.22433460076045628,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 59,
+          "predicted_positive_count": 0,
+          "group": "Q1_shortest",
+          "small_sample": false
+        },
+        {
+          "n": 263,
+          "actual_return_rate": 0.34220532319391633,
+          "return_recall": 0.08888888888888889,
+          "return_precision": 1.0,
+          "offer_selection_rate": 0.9695817490494296,
+          "actual_positive_count": 90,
+          "predicted_positive_count": 8,
+          "group": "Q2",
+          "small_sample": false
+        },
+        {
+          "n": 263,
+          "actual_return_rate": 0.4714828897338403,
+          "return_recall": 0.31451612903225806,
+          "return_precision": 1.0,
+          "offer_selection_rate": 0.8517110266159695,
+          "actual_positive_count": 124,
+          "predicted_positive_count": 39,
+          "group": "Q3",
+          "small_sample": false
+        },
+        {
+          "n": 263,
+          "actual_return_rate": 0.7034220532319392,
+          "return_recall": 0.6378378378378379,
+          "return_precision": 0.8740740740740741,
+          "offer_selection_rate": 0.4866920152091255,
+          "actual_positive_count": 185,
+          "predicted_positive_count": 135,
+          "group": "Q4_longest",
+          "small_sample": false
+        }
+      ],
+      "eligible_group_count": 4,
+      "gaps": {
+        "return_recall": {
+          "gap": 0.6378,
+          "exceeds_5_percentage_points": true
+        },
+        "return_precision": {
+          "gap": 1.0,
+          "exceeds_5_percentage_points": true
+        },
+        "offer_selection_rate": {
+          "gap": 0.5133,
+          "exceeds_5_percentage_points": true
+        }
+      }
+    },
+    "customer_spending_quartiles": {
+      "groups": [
+        {
+          "n": 263,
+          "actual_return_rate": 0.18631178707224336,
+          "return_recall": 0.0,
+          "return_precision": 0.0,
+          "offer_selection_rate": 1.0,
+          "actual_positive_count": 49,
+          "predicted_positive_count": 0,
+          "group": "Q1_lowest",
+          "small_sample": false
+        },
+        {
+          "n": 263,
+          "actual_return_rate": 0.34600760456273766,
+          "return_recall": 0.01098901098901099,
+          "return_precision": 1.0,
+          "offer_selection_rate": 0.9961977186311787,
+          "actual_positive_count": 91,
+          "predicted_positive_count": 1,
+          "group": "Q2",
+          "small_sample": false
+        },
+        {
+          "n": 263,
+          "actual_return_rate": 0.46387832699619774,
+          "return_recall": 0.13934426229508196,
+          "return_precision": 0.85,
+          "offer_selection_rate": 0.9239543726235742,
+          "actual_positive_count": 122,
+          "predicted_positive_count": 20,
+          "group": "Q3",
+          "small_sample": false
+        },
+        {
+          "n": 263,
+          "actual_return_rate": 0.7452471482889734,
+          "return_recall": 0.75,
+          "return_precision": 0.9130434782608695,
+          "offer_selection_rate": 0.38783269961977185,
+          "actual_positive_count": 196,
+          "predicted_positive_count": 161,
+          "group": "Q4_highest",
+          "small_sample": false
+        }
+      ],
+      "eligible_group_count": 4,
+      "gaps": {
+        "return_recall": {
+          "gap": 0.75,
+          "exceeds_5_percentage_points": true
+        },
+        "return_precision": {
+          "gap": 1.0,
+          "exceeds_5_percentage_points": true
+        },
+        "offer_selection_rate": {
+          "gap": 0.6122,
+          "exceeds_5_percentage_points": true
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Historical UCI data is not representative of Quebec customers.",
+    "Country is a model input and may act as a geographic proxy.",
+    "Small groups have unstable metrics and are excluded from gap comparisons.",
+    "Quartiles are constructed from ranked values to handle ties.",
+    "Observed disparities do not by themselves prove discrimination.",
+    "No real retention campaign or causal impact was evaluated."
+  ],
+  "proposed_mitigations": [
+    "Investigate flagged gaps with larger representative samples.",
+    "Compare performance with and without the country feature.",
+    "Evaluate group-specific calibration and error rates.",
+    "Require human review before using scores for real interventions."
+  ],
+  "mitigation_tradeoffs": [
+    "Removing country may reduce predictive performance.",
+    "Group-specific adjustments may improve one metric while worsening another.",
+    "Human review increases operating cost but improves oversight."
+  ]
+}
