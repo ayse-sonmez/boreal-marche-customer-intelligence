@@ -23,7 +23,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-api.txt
-          pip install pytest ruff
+          pip install pytest ruff==0.17.2
 
       - name: Lint
         run: ruff check src tests --ignore ASYNC230,ISC004,BLE001

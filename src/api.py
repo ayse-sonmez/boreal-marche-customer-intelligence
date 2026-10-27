@@ -4,7 +4,7 @@ import platform
 import sqlite3
 import time
 from contextlib import asynccontextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from threading import Lock
 
@@ -193,7 +193,7 @@ def log_prediction(
             """,
             (
                 datetime.now(
-                    timezone.utc
+                    UTC
                 ).isoformat(),
                 prediction.customer_id,
                 prediction.return_probability,
@@ -240,7 +240,7 @@ def record_http_request(method, endpoint, status_code, duration_ms):
                        (timestamp_utc, method, endpoint, status_code, duration_ms)
                        VALUES (?, ?, ?, ?, ?)""",
                     (
-                        datetime.now(timezone.utc).isoformat(),
+                        datetime.now(UTC).isoformat(),
                         method,
                         endpoint,
                         int(status_code),
@@ -970,7 +970,7 @@ def log_feature_snapshot(customer_id, row):
         db.execute(
             """INSERT INTO prediction_feature_snapshots
                (timestamp_utc, customer_id, features_json) VALUES (?, ?, ?)""",
-            (datetime.now(timezone.utc).isoformat(), int(customer_id),
+            (datetime.now(UTC).isoformat(), int(customer_id),
              json.dumps(features, allow_nan=False)),
         )
 
@@ -1166,7 +1166,7 @@ def submit_delayed_label(request: DelayedLabelRequest):
                 observed_at_utc=excluded.observed_at_utc,
                 source=excluded.source
         """, (request.customer_id, request.label_90d,
-              datetime.now(timezone.utc).isoformat()))
+              datetime.now(UTC).isoformat()))
     return {"status": "recorded", "customer_id": request.customer_id,
             "label_90d": request.label_90d,
             "note": "Only submit verified outcomes after the 90-day observation window."}

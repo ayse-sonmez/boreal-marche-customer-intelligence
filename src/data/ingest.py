@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -48,7 +48,7 @@ def save_manifest(
         "source": "UCI Machine Learning Repository",
         "source_file": str(source_file),
         "processed_file": str(parquet_file),
-        "retrieval_date_utc": datetime.now(timezone.utc).isoformat(),
+        "retrieval_date_utc": datetime.now(UTC).isoformat(),
         "sha256": sha256_file(source_file),
         "row_count": row_count,
         "licence": "Creative Commons Attribution 4.0 International (CC BY 4.0)",

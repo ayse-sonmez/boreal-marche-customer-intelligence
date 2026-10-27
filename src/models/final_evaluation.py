@@ -2,7 +2,7 @@ import json
 import platform
 import subprocess
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import joblib
@@ -467,7 +467,7 @@ def main():
         ),
         "created_at_utc": (
             datetime.now(
-                timezone.utc
+                UTC
             ).isoformat()
         ),
         "libraries": {

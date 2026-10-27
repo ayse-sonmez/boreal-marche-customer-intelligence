@@ -1,7 +1,7 @@
 import hashlib
 import json
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -242,7 +242,7 @@ def main():
         "header": {
             "mining_date_utc": (
                 datetime.now(
-                    timezone.utc
+                    UTC
                 ).isoformat()
             ),
             "method": "FP-Growth",
