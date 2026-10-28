@@ -8,7 +8,7 @@ An academic capstone project combining customer retention prediction, product re
 **Streamlit application:**  
 https://aysesonmez-borealmarche-91444056580.northamerica-northeast1.run.app
 
-**Deployment:** Google Cloud Run, Montréal (`northamerica-northeast1`).
+**Deployment:** Google Cloud Run, MontrÃ©al (`northamerica-northeast1`).
 
 The FastAPI backend is private and is accessed through authenticated service-to-service requests from the frontend.
 
@@ -77,25 +77,25 @@ See `DATA_CARD.md` for data provenance, preparation, and limitations.
 
 ```text
 boreal-marche-customer-intelligence/
-├── artifacts/             # Trained model and recommendation rules
-├── data/                  # Data pipeline artifacts and DVC pointer
-├── docker/                # Container definitions
-├── docs/corpus/           # English/French policy knowledge base
-├── frontend/              # Streamlit interface
-├── reports/               # Evaluation and audit results
-├── src/
-│   ├── data/              # Data ingestion and cleaning
-│   ├── features/          # Customer feature engineering
-│   ├── models/            # Retention training and evaluation
-│   ├── rag/               # Assistant, retrieval, and tools
-│   └── recommendation/    # Market-basket analysis
-├── tests/                 # Tests and evaluation questions
-├── ARCHITECTURE.md
-├── DATA_CARD.md
-├── GOVERNANCE_LOI25.md
-├── MODEL_CARD.md
-├── requirements-api.txt
-└── requirements-frontend.txt
+â”œâ”€â”€ artifacts/             # Trained model and recommendation rules
+â”œâ”€â”€ data/                  # Data pipeline artifacts and DVC pointer
+â”œâ”€â”€ docker/                # Container definitions
+â”œâ”€â”€ docs/corpus/           # English/French policy knowledge base
+â”œâ”€â”€ frontend/              # Streamlit interface
+â”œâ”€â”€ reports/               # Evaluation and audit results
+â”œâ”€â”€ src/
+â”‚   â”œâ”€â”€ data/              # Data ingestion and cleaning
+â”‚   â”œâ”€â”€ features/          # Customer feature engineering
+â”‚   â”œâ”€â”€ models/            # Retention training and evaluation
+â”‚   â”œâ”€â”€ rag/               # Assistant, retrieval, and tools
+â”‚   â””â”€â”€ recommendation/    # Market-basket analysis
+â”œâ”€â”€ tests/                 # Tests and evaluation questions
+â”œâ”€â”€ ARCHITECTURE.md
+â”œâ”€â”€ DATA_CARD.md
+â”œâ”€â”€ GOVERNANCE_LOI25.md
+â”œâ”€â”€ MODEL_CARD.md
+â”œâ”€â”€ requirements-api.txt
+â””â”€â”€ requirements-frontend.txt
 ```
 
 ## Local Setup
@@ -178,4 +178,19 @@ The project documents data provenance, model limitations, fairness risks, privac
 **Course:** 420-977-VA Capstone Project
 
 This repository demonstrates the integration of predictive analytics, recommendation systems, and bilingual AI assistance in a cloud-deployed application.
-'@ | Set-Content "README.md" -Encoding UTF8
+
+
+## System Architecture
+
+![Boreal Marche System Architecture](Boreal_Marche_D2_Architecture_Diagram.png)
+
+The platform integrates customer retention prediction, FP-Growth recommendations, and a bilingual AI assistant using FAISS retrieval. The Streamlit interface and FastAPI backend are deployed on Google Cloud Run.
+
+## Next Steps
+
+- Improve fairness across customer subgroups.
+- Expand recommendation coverage and evaluate business impact.
+- Add persistent production monitoring and automated deployment.
+- Validate performance under higher traffic.
+- Strengthen privacy and security controls before production use.
+
