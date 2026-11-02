@@ -1156,4 +1156,3 @@ st.divider()
 st.caption(
     "© Boréal Marché | Educational AI Capstone Project"
 )
-
