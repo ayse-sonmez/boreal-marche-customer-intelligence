@@ -79,6 +79,9 @@ translations = {
         "empty": "Your basket is empty.",
         "because": "Because you added",
         "customer": "Customer ID",
+        "customer_not_found": "Customer ID {customer_id} was not found in the dataset. Please enter a valid customer ID and try again.",
+        "prediction_unavailable": "Prediction service is temporarily unavailable. Please try again later.",
+        "prediction_request_error": "Unable to complete the prediction. Please check your input and try again.",
         "predict": "Predict Customer Retention",
         "return_probability": "90-Day Return Probability",
         "threshold": "Decision Threshold",
@@ -165,6 +168,9 @@ translations = {
         "empty": "Votre panier est vide.",
         "because": "Parce que vous avez ajouté",
         "customer": "Identifiant client",
+        "customer_not_found": "Le client {customer_id} est introuvable dans le jeu de données. Veuillez saisir un identifiant valide.",
+        "prediction_unavailable": "Le service de prédiction est temporairement indisponible. Veuillez réessayer plus tard.",
+        "prediction_request_error": "Impossible de terminer la prédiction. Vérifiez les données et réessayez.",
         "predict": "Prédire la fidélisation",
         "return_probability": "Probabilité de retour à 90 jours",
         "threshold": "Seuil de décision",
@@ -613,11 +619,26 @@ elif page == "prediction":
 
                 st.session_state.prediction = result
                 st.session_state.prediction_customer = int(customer_id)
-
-            except requests.RequestException as error:
+            except requests.HTTPError as error:
                 st.session_state.prediction = None
                 st.session_state.prediction_customer = None
-                st.error(f"Prediction API error: {error}")
+
+                status = error.response.status_code if error.response is not None else None
+
+                if status == 404:
+                    st.warning(
+                        t["customer_not_found"].format(customer_id=int(customer_id))
+        )
+                elif status is not None and status >= 500:
+                    st.error(t["prediction_unavailable"])
+                else:
+                    st.warning(t["prediction_request_error"])
+
+            except requests.RequestException:
+                    st.session_state.prediction = None
+                    st.session_state.prediction_customer = None
+                    st.error(t["prediction_unavailable"])
+
 
     result = st.session_state.prediction
 
